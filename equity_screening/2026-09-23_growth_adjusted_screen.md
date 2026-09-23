@@ -7,6 +7,7 @@
 > - 실적 [A]: 회사 공시 재무제표(10-K/10-Q/20-F/6-K, Yahoo 재무제표 API). 가이던스 [G]: 회사 보도자료·실적 콜(아래 출처)
 > - 표기: **[A] Actual / [G] Guidance / [C] Consensus / [M] Model / [I] Implied**
 > - 이 문서는 정밀 가치평가에 넣을 **후보를 고르는 1차 스크린**이며, 투자 권유가 아니다.
+> - **업데이트(2026-09-23):** 1위 Celestica 정밀 가치평가 결과 → 확률가중 DCF $256·종합 적정가 약 $300으로 현재가($364.66)가 Bull 시나리오에 근접(중립). 8/5 $3.39B 유상증자, capex 급증, 내부자 매도 등 스크린이 놓친 요인 포함. [`valuation/CLS/2026-09-23_CLS_valuation.md`](valuation/CLS/2026-09-23_CLS_valuation.md)
 
 ---
 
