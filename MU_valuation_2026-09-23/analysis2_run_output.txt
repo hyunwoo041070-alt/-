@@ -1,0 +1,117 @@
+=== Multiples ladder (price fixed) ===
+TTM P/E 24.2  FY26E P/E 14.9  NTM(cons) 6.90  FY27 cons 6.96
+NTM base EPS 149.5 P/E 7.29
+  FY27 Bear: EPS 130.4  P/E 8.4  FCF/sh 92.3 FCFy 8.5%
+  FY27 Base: EPS 149.7  P/E 7.3  FCF/sh 106.9 FCFy 9.8%
+  FY27 Bull: EPS 168.8  P/E 6.5  FCF/sh 120.2 FCFy 11.0%
+  FY28 Bear: EPS 75.5  P/E 14.4  FCF/sh 64.3 FCFy 5.9%
+  FY28 Base: EPS 147.4  P/E 7.4  FCF/sh 117.9 FCFy 10.8%
+  FY28 Bull: EPS 201.4  P/E 5.4  FCF/sh 157.8 FCFy 14.5%
+  FY29 Bear: EPS 21.8  P/E 50.1  FCF/sh 25.0 FCFy 2.3%
+  FY29 Base: EPS 82.1  P/E 13.3  FCF/sh 75.8 FCFy 7.0%
+  FY29 Bull: EPS 184.7  P/E 5.9  FCF/sh 155.3 FCFy 14.2%
+FY27 Base EV/EBIT 6.31 EV/EBITDA 5.86 EV/Rev 5.24  EBITDA 207.6
+FY28 Base EV/EBIT 6.93 EV/EBITDA 6.22 EV/Rev 5.33  EBITDA 195.6
+FY29 Base EV/EBIT 13.75 EV/EBITDA 10.72 EV/Rev 7.15  EBITDA 113.4
+FY26E EV/EBIT 12.5 EV/EBITDA 11.3  EV/Rev 9.43
+TTM EV/EBIT 20.4 EV/EBITDA 17.5
+
+=== Growth rates (Base) ===
+FY27 EPS g 104.8%  2Y CAGR 42.0%  3Y CAGR 4.0%  (cons FY27 g 113.1%)
+PEG1Y(cons) 0.062 PEG1Y(base) 0.070 PEG2Y 0.173 PEG3Y 1.84
+Rev: 1Y 79.9% 2Y 33.0% 3Y 9.6%
+EBIT: 1Y 98.3% 2Y 34.5% 3Y -3.1%
+EBITDA: 1Y 92.9% 2Y 34.8% 3Y 1.8%
+FCF 2Y CAGR 44.2% 3Y 8.1%  FCF/sh 2Y 51.1% 3Y 13.6%
+EV/EBITDA27 / EBITDA 2Y CAGR 0.168; /3Y 3.32
+EV/Rev27 / Rev 2Y CAGR 0.159; /3Y 0.543
+EV/EBIT27 / EBIT 2Y CAGR 0.183
+
+=== Mid-cycle / Normalized EPS (per CURRENT diluted share, no buyback, no windfall interest) ===
+Bear: mid-cycle rev 101 margin 15.0% EPS 11.8 | normalized (FY32 rev 108 x LR 20%) EPS 16.6 | peak EPS 130.4
+   P/E on mid-cycle 92.6x, on normalized 65.8x, on peak 8.4x
+Base: mid-cycle rev 165 margin 36.8% EPS 45.6 | normalized (FY32 rev 172 x LR 30%) EPS 39.0 | peak EPS 149.7
+   P/E on mid-cycle 23.9x, on normalized 28.0x, on peak 7.3x
+Bull: mid-cycle rev 275 margin 58.9% EPS 120.2 | normalized (FY32 rev 288 x LR 42%) EPS 90.5 | peak EPS 201.4
+   P/E on mid-cycle 9.1x, on normalized 12.0x, on peak 5.4x
+
+=== Excess (above-normal) FCF during peak FY27-FY29, PV per share ===
+Bear: normal FCFF 16.2  PV excess 128.9 -> $112/sh
+Base: normal FCFF 38.1  PV excess 170.6 -> $148/sh
+Bull: normal FCFF 88.5  PV excess 140.2 -> $122/sh
+net financial assets/sh 32.7
+
+=== Growth-Adjusted fair price ===
+Bear: FY+1 587 | FY+2 (disc.) 306 | normalized 344 -> GA 397
+Base: FY+1 898 | FY+2 (disc.) 797 | normalized 727 -> GA 784
+Bull: FY+1 1435 | FY+2 (disc.) 1542 | normalized 1603 -> GA 1549
+GA prob-weighted 821
+
+=== Relative value (peer fwd P/E on consensus NTM EPS) ===
+{'Bear': 711, 'Base': 980, 'Bull': 1390} 981
+
+=== Integrated (DCF 50 / GA 40 / Rel 10) ===
+{'Bear': 368, 'Base': 691, 'Bull': 1332} PW 722 DCF PW 592
+upside vs price: DCF -45.7% GA -24.7% integ -33.7%
+
+=== 12M roll-forward IV (Base-case payout, buyback at $1,090) ===
+E0 830.7 E1 839.3 shares 1.079 IV_12M 778 ; value-neutral (buyback at IV) would be 802
+
+=== 3Y (end FY29 ~ Sep-2029) intrinsic value per share, DCF-based ===
+Bear: EV3 150 cash3 114 eq3 252 sh3 1.040 IV3 242
+Base: EV3 457 cash3 150 eq3 595 sh3 0.963 IV3 618
+Bull: EV3 1240 cash3 187 eq3 1414 sh3 0.885 IV3 1598
+IV3 PW 701
+3Y market price PW 771 (P/FV 1.1) -> 3Y CAGR -10.8%
+   Bear 3Y CAGR -37.3%
+   Base 3Y CAGR -14.5%
+   Bull 3Y CAGR 17.3%
+IV3 scaled by integrated/DCF ratio (1.22) = 856
+
+=== Required-return buy price & safety margin ===
+req 12%: buy price 550 ; using scaled IV3 610
+req 15%: buy price 508 ; using scaled IV3 564
+safety discount 30%: 506
+safety discount 35%: 470
+safety discount 40%: 433
+
+=== 12M price scenarios (Sep-2027: price = FY28 EPS x forward P/E) ===
+A EPS 성장(Base) + P/E 유지: FY27 EPS(trailing then) n/a | FY28 EPS 147.4 | exit P/E 6.9 | price 1017 | TSR -6.6% | EPS contrib -6.7% | multiple contrib +0.0% | p=0.25
+B EPS 성장(Bull) + P/E 상승: FY27 EPS(trailing then) n/a | FY28 EPS 201.4 | exit P/E 8.5 | price 1712 | TSR +57.1% | EPS contrib +27.5% | multiple contrib +23.2% | p=0.2
+C EPS 성장(Base) + P/E 하락: FY27 EPS(trailing then) n/a | FY28 EPS 147.4 | exit P/E 5.0 | price 737 | TSR -32.3% | EPS contrib -6.7% | multiple contrib -27.5% | p=0.25
+D EPS 미달(Bear) + P/E 압축: FY27 EPS(trailing then) n/a | FY28 EPS 75.5 | exit P/E 6.0 | price 453 | TSR -58.4% | EPS contrib -52.2% | multiple contrib -13.0% | p=0.3
+Expected 12M value 917 -> -15.8%
+
+=== Reverse DCF 2-variable matrices (Base otherwise) ===
+mid-cycle revenue scale x LR margin
+1.0x    559    596    634    671    708
+1.5x    710    766    822    878    934
+2.0x    864    938   1013   1087   1162
+2.5x   1018   1112   1205   1298   1391
+3.0x   1174   1286   1398   1509   1621
+plateau x LR margin
+p0    559    634    708    783
+p2    665    726    786    847
+p4    752    801    850    899
+p6    822    861    901    941
+p8    878    911    943    975
+plateau x mid-cycle scale
+p0    559    634    710    787    864   1018
+p1    615    683    751    820    889   1029
+p2    665    726    788    850    913   1038
+p3    711    766    821    877    933   1047
+p4    752    801    851    902    952   1054
+  plateau 8 -> 878
+  plateau 10 -> 925
+  plateau 12 -> 962
+  plateau 14 -> 992
+  plateau 16 -> 1017
+  plateau 18 -> 1037
+  plateau 20 -> 1053
+RONIC x mid-cycle scale (LR margin 30%)
+0.11    550    697    846    996
+0.13    559    710    864   1018
+0.18    573    731    891   1053
+0.25    583    746    911   1078
+scale needed if LR margin 40%: 2.20x -> FY31 rev 348, FY36 rev 481
+scale needed with 2-yr plateau: 2.71x

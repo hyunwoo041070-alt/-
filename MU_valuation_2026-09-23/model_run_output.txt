@@ -1,0 +1,120 @@
+KE=0.1108 WACC_calc=0.1089 WACC_used=0.11 g=0.03 NET_FIN=37.6
+Mcap diluted=1253.5 basic=1231.7 market EV(op)=1215.9
+
+=== Bear (p=0.3) ===
+FY   rev    g%    mgn%  EBIT   NOPAT  capex  D&A  dNWC  netInv  FCFF   IC_close ROIC%  EP
+FY27  210.0   62.8  80.0  168.0  142.8   45.0  15.0  11.3   41.3  101.5   136.3  123.5  132.3
+FY28  150.0  -28.6  60.0   90.0   76.5   38.0  19.0  -8.4   10.6   65.9   146.9   54.0   61.5
+FY29   95.0  -36.7  22.0   20.9   17.8   25.0  22.0  -7.7   -4.7   22.5   142.2   12.3    1.6
+FY30   85.0  -10.5   5.0    4.2    3.6   20.0  23.0  -1.4   -4.4    8.0   137.8    2.6  -12.0
+FY31  100.0   17.6  15.0   15.0   12.8   24.0  24.0   2.1    2.1   10.7   139.9    9.2   -2.4
+FY32  108.0    8.0  16.0   17.3   14.5    -     -     -      9.4    5.1   149.4   10.0   -0.9
+FY33  115.6    7.0  17.0   19.6   16.5    -     -     -      8.7    7.8   158.1   10.7    0.1
+FY34  122.5    6.0  18.0   22.0   18.5    -     -     -      7.7   10.9   165.7   11.4    1.1
+FY35  128.6    5.0  19.0   24.4   20.5    -     -     -      6.4   14.1   172.1   12.2    2.3
+FY36  133.8    4.0  20.0   26.8   22.5    -     -     -      5.0   17.5   177.2   12.9    3.5
+PV StageI=183.1 StageII=24.2 StageIII=73.6 TV=207.9 TVshare=26.2% EV=280.9 Equity=318.5 /sh=277
+NOPAT_T+1=22.9 reinv=0.2727272727272727 IC_T=177.2 ROIC_T+1=12.9%
+EP check (EOY): EV_EP=269.0 vs EV_FCFF=269.0
+  FY27 adjNI=145.9 EPS=130.4 avgSh=1.120 endSh=1.089 cash=86.0 buyback=71.6 FCF/sh=92.3
+  FY28 adjNI=80.8 EPS=75.5 avgSh=1.070 endSh=1.051 cash=106.6 buyback=47.5 FCF/sh=64.3
+  FY29 adjNI=22.8 EPS=21.8 avgSh=1.045 endSh=1.040 cash=114.5 buyback=17.6 FCF/sh=25.0
+  FY30 adjNI=8.9 EPS=8.5 avgSh=1.038 endSh=1.037 cash=118.0 buyback=7.7 FCF/sh=11.5
+  FY31 adjNI=18.2 EPS=17.6 avgSh=1.036 endSh=1.034 cash=122.4 buyback=9.6 FCF/sh=14.2
+
+=== Base (p=0.5) ===
+FY   rev    g%    mgn%  EBIT   NOPAT  capex  D&A  dNWC  netInv  FCFF   IC_close ROIC%  EP
+FY27  232.0   79.9  83.0  192.6  163.7   47.0  15.0  14.4   46.4  117.3   141.4  138.5  153.2
+FY28  228.0   -1.7  77.0  175.6  149.2   50.0  20.0  -0.6   29.4  119.8   170.9   95.6  133.7
+FY29  170.0  -25.4  52.0   88.4   75.1   38.0  25.0  -8.1    4.9   70.3   175.7   43.4   56.3
+FY30  140.0  -17.6  30.0   42.0   35.7   30.0  28.0  -4.2   -2.2   37.9   173.5   20.4   16.4
+FY31  158.0   12.9  35.0   55.3   47.0   34.0  30.0   2.5    6.5   40.5   180.1   26.6   27.9
+FY32  172.2    9.0  34.0   58.6   49.2    -     -     -     15.3   33.9   195.4   26.2   29.4
+FY33  186.0    8.0  33.0   61.4   51.6    -     -     -     14.5   37.1   209.8   25.4   30.1
+FY34  199.0    7.0  32.0   63.7   53.5    -     -     -     12.2   41.3   222.0   24.8   30.4
+FY35  210.0    5.5  31.0   65.1   54.7    -     -     -      9.3   45.3   231.3   24.1   30.3
+FY36  218.4    4.0  30.0   65.5   55.0    -     -     -      7.3   47.7   238.6   23.4   29.6
+PV StageI=321.1 StageII=93.7 StageIII=190.6 TV=538.5 TVshare=31.5% EV=605.5 Equity=643.1 /sh=559
+NOPAT_T+1=56.0 reinv=0.23076923076923075 IC_T=238.6 ROIC_T+1=23.5%
+EP check (EOY): EV_EP=581.3 vs EV_FCFF=581.3
+  FY27 adjNI=166.8 EPS=149.7 avgSh=1.115 endSh=1.079 cash=90.7 buyback=82.7 FCF/sh=106.9
+  FY28 adjNI=153.7 EPS=147.4 avgSh=1.042 endSh=1.006 cash=127.6 buyback=85.4 FCF/sh=117.9
+  FY29 adjNI=80.8 EPS=82.1 avgSh=0.985 endSh=0.963 cash=150.0 buyback=51.6 FCF/sh=75.8
+  FY30 adjNI=42.2 EPS=44.3 avgSh=0.952 endSh=0.941 cash=162.9 buyback=29.5 FCF/sh=45.1
+  FY31 adjNI=54.0 EPS=58.1 avgSh=0.929 endSh=0.917 cash=176.7 buyback=31.7 FCF/sh=49.5
+
+=== Bull (p=0.2) ===
+FY   rev    g%    mgn%  EBIT   NOPAT  capex  D&A  dNWC  netInv  FCFF   IC_close ROIC%  EP
+FY27  255.0   97.7  85.0  216.8  184.2   50.0  15.0  17.6   52.6  131.6   147.6  151.9  173.8
+FY28  285.0   11.8  83.0  236.5  201.1   60.0  21.0   4.2   43.2  157.9   190.8  118.8  184.8
+FY29  270.0   -5.3  72.0  194.4  165.2   55.0  27.0  -2.1   25.9  139.3   216.7   81.1  144.2
+FY30  240.0  -11.1  58.0  139.2  118.3   45.0  32.0  -4.2    8.8  109.5   225.5   53.5   94.5
+FY31  262.0    9.2  58.0  152.0  129.2   48.0  35.0   3.1   16.1  113.1   241.6   55.3  104.4
+FY32  288.2   10.0  54.8  157.9  132.7    -     -     -     25.9  106.7   267.6   52.1  106.1
+FY33  314.1    9.0  51.6  162.1  136.2    -     -     -     25.1  111.0   292.7   48.6  106.7
+FY34  339.3    8.0  48.4  164.2  137.9    -     -     -     20.4  117.6   313.1   45.5  105.7
+FY35  359.6    6.0  45.2  162.6  136.5    -     -     -     16.2  120.4   329.2   42.5  102.1
+FY36  375.8    4.5  42.0  157.8  132.6    -     -     -     11.3  121.3   340.5   39.6   96.4
+PV StageI=516.6 StageII=266.2 StageIII=497.6 TV=1405.6 TVshare=38.9% EV=1280.4 Equity=1318.0 /sh=1146
+NOPAT_T+1=134.9 reinv=0.16666666666666666 IC_T=340.5 ROIC_T+1=39.6%
+EP check (EOY): EV_EP=1234.2 vs EV_FCFF=1234.2
+  FY27 adjNI=187.4 EPS=168.8 avgSh=1.110 endSh=1.070 cash=95.0 buyback=92.7 FCF/sh=120.2
+  FY28 adjNI=205.7 EPS=201.4 avgSh=1.021 endSh=0.972 cash=143.4 buyback=112.1 FCF/sh=157.8
+  FY29 adjNI=171.5 EPS=184.7 avgSh=0.929 endSh=0.885 cash=186.6 buyback=100.4 FCF/sh=155.3
+  FY30 adjNI=126.0 EPS=148.2 avgSh=0.851 endSh=0.816 cash=221.4 buyback=80.6 FCF/sh=136.2
+  FY31 adjNI=138.1 EPS=177.1 avgSh=0.780 endSh=0.744 cash=257.6 buyback=83.9 FCF/sh=154.6
+
+Prob-weighted DCF/share = 592
+FCFE cross-check Base equity=641.9 /sh=558 (KE=0.1108)
+
+WACC x g (Base $/sh)
+ 10.0%    602    606    611    616    622
+ 10.5%    577    580    583    587    591
+ 11.0%    555    557    559    562    565
+ 11.5%    535    536    538    540    542
+ 12.0%    517    518    519    520    521
+
+Mid-cycle revenue scale x long-run margin (Base $/sh)
+0.80    440    470    500    529    559    589
+0.90    462    496    529    563    596    630
+1.00    485    522    559    596    634    671
+1.15    519    561    604    647    690    733
+1.30    553    601    650    698    746    795
+1.50    599    654    710    766    822    878
+
+Terminal RONIC x fade years (Base $/sh); last col = full fade (ROIC->WACC on all capital)
+  11%    529    550    577  full-fade=550
+  13%    539    559    585  full-fade=550
+  15%    546    566    591  full-fade=550
+  18%    553    573    597  full-fade=550
+  22%    560    580    603  full-fade=550
+
+Long-run margin x WACC (Base $/sh)
+  20%    521    485    456
+  25%    566    522    487
+  30%    611    559    519
+  35%    656    596    550
+  40%    700    634    582
+  45%    745    671    613
+
+Plateau years (FY27-level economics repeated) x long-run margin (Base $/sh)
+plateau 0    522    559    596    634    671
+plateau 1    582    615    649    682    716
+plateau 2    635    665    696    726    756
+plateau 3    684    711    738    765    792
+
+Reverse DCF (one variable at a time, Base otherwise):
+  required long-run op margin = 95.0%
+  required mid-cycle revenue scale = 2.73x (FY31 rev = 431)
+  required terminal RONIC = 5000% (ps at RONIC=inf: 609)
+  ps at RONIC=1e9 (no reinvestment) = 609
+  plateau 0y -> 559
+  plateau 1y -> 615
+  plateau 2y -> 665
+  plateau 3y -> 711
+  plateau 4y -> 752
+  plateau 5y -> 788
+  required uniform margin uplift (FY29+ & LR) = 2.55x -> LR margin 76.4%, FY30 76%
+  implied FY31 rev=431 (5Y CAGR 27.3%), FY36 rev=596 (10Y CAGR 16.5%)
+
+Bull per-share=1146; Bull with WACC 10% = 1279
