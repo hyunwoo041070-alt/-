@@ -92,6 +92,8 @@ TAGS: dict[str, list[str]] = {
         "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
     ],
     "ocf": ["NetCashProvidedByUsedInOperatingActivities"],
+    "goodwill": ["Goodwill"],
+    "intangibles": ["IntangibleAssetsNetExcludingGoodwill", "FiniteLivedIntangibleAssetsNet"],
     "receivables": ["AccountsReceivableNetCurrent"],
     "inventory": ["InventoryNet"],
 }
@@ -159,19 +161,33 @@ def annual_series(facts: dict, field_name: str) -> dict[int, float]:
             for v in unit_vals:
                 if v.get("fp") != "FY" or v.get("form") not in ANNUAL_FORMS:
                     continue
-                if v.get("val") is None or v.get("fy") is None:
+                if v.get("val") is None or not v.get("end"):
                     continue
                 if is_flow:
                     start, end = v.get("start"), v.get("end")
                     if not start or not end or not _is_annual(start, end):
                         continue
-                fy = int(v["fy"])
+                fy = _period_year(v["end"])
+                if fy is None:
+                    continue
                 filed = v.get("filed", "")
                 if fy not in out or filed >= out[fy][0]:
                     out[fy] = (filed, float(v["val"]))
         if out:
             return {fy: val for fy, (_, val) in sorted(out.items())}
     return {}
+
+
+def _period_year(end: str) -> int | None:
+    """Fiscal year taken from the period END date.
+
+    A fiscal year ending Aug 2026 or Jan 2026 both land on the year the company
+    itself labels that FY, which the filing's own "fy" focus does not reliably do.
+    """
+    try:
+        return int(end.split("-")[0])
+    except (ValueError, AttributeError, IndexError):
+        return None
 
 
 def _is_annual(start: str, end: str) -> bool:
@@ -188,6 +204,76 @@ def last_n(series: dict[int, float], n: int) -> list[float]:
     return [series[fy] for fy in sorted(series)[-n:]]
 
 
+def ttm_flow(facts: dict, field_name: str) -> tuple[float, str] | None:
+    """Trailing-twelve-month total for a flow item, from quarterly filings.
+
+    BUG C fix: the last filed 10-K can be 12+ months stale, which anchors any
+    margin normalization to a revenue base far below the current run rate.
+    Sums the four most recent contiguous ~quarterly periods and returns the
+    end date so the vintage is always visible.
+    """
+    from datetime import date
+    gaap = facts.get("facts", {}).get("us-gaap", {})
+    periods: dict[tuple[str, str], tuple[str, float]] = {}
+    for tag in TAGS[field_name]:
+        node = gaap.get(tag)
+        if not node:
+            continue
+        for unit_vals in node.get("units", {}).values():
+            for v in unit_vals:
+                start, end, val = v.get("start"), v.get("end"), v.get("val")
+                if not start or not end or val is None:
+                    continue
+                try:
+                    s_d = date(*map(int, start.split("-")))
+                    e_d = date(*map(int, end.split("-")))
+                except (ValueError, TypeError):
+                    continue
+                if not 80 <= (e_d - s_d).days <= 100:
+                    continue
+                key = (start, end)
+                filed = v.get("filed", "")
+                if key not in periods or filed >= periods[key][0]:
+                    periods[key] = (filed, float(val))
+    if len(periods) < 4:
+        return None
+    ordered = sorted(periods.items(), key=lambda kv: kv[0][1])[-4:]
+    for (a, b) in zip(ordered, ordered[1:]):   # contiguous, no gap/overlap > 10d
+        prev_end = date(*map(int, a[0][1].split("-")))
+        nxt_start = date(*map(int, b[0][0].split("-")))
+        if abs((nxt_start - prev_end).days) > 10:
+            return None
+    last_end = ordered[-1][0][1]
+    span_start = date(*map(int, ordered[0][0][0].split("-")))
+    span_end = date(*map(int, last_end.split("-")))
+    if not 330 <= (span_end - span_start).days <= 400:   # must really be ~12 months
+        return None
+    if (date.today() - span_end).days > 270:             # and must be recent
+        return None
+    return sum(v[1] for _, v in ordered), last_end
+
+
+def rebased_eps(facts: dict, years: int) -> tuple[dict[int, float], float | None]:
+    """EPS history restated onto today's share count.
+
+    BUG A fix: XBRL reports EPS and share counts as filed, so a stock split
+    puts pre- and post-split years on different scales (Broadcom: 427M shares
+    and $32.98 EPS in FY2023 against 4,778M and $1.23 in FY2024, a 10:1 split).
+    Dividing each year's net income by the LATEST diluted share count puts
+    every year on one comparable scale. This also strips the buyback effect,
+    which is what you want when comparing cycle peaks and troughs.
+    """
+    ni = annual_series(facts, "net_income")
+    sh = annual_series(facts, "diluted_shares")
+    if not ni or not sh:
+        return {}, None
+    latest_sh = sh[max(sh)]
+    if not latest_sh:
+        return {}, None
+    out = {fy: ni[fy] / latest_sh for fy in sorted(ni)[-years:]}
+    return out, latest_sh
+
+
 # ---------------------------------------------------------------- calculations
 WACC_DEFAULT = {"large": 0.085, "mid": 0.100, "small": 0.120}
 TERMINAL_G = 0.04
@@ -202,6 +288,11 @@ class Result:
     eff_tax: float | None = None
     median_op_margin: float | None = None
     median_roic: float | None = None
+    median_roic_ex_gw: float | None = None
+    revenue_base: float | None = None
+    revenue_base_kind: str = "확인 불가"
+    revenue_base_asof: str = ""
+    eps_rebased_note: str = ""
     latest_revenue: float | None = None
     latest_shares: float | None = None
     invested_capital: float | None = None
@@ -234,7 +325,8 @@ def _median(vals: list[float]) -> float | None:
 
 
 def compute(ticker: str, facts: dict, price: float, fwd_eps: float | None,
-            wacc: float | None, years: int = 10) -> Result:
+            wacc: float | None, years: int = 10,
+            norm_revenue: float | None = None) -> Result:
     S = {k: annual_series(facts, k) for k in TAGS}
     r = Result(ticker=ticker.upper(), price=price, fwd_eps=fwd_eps)
 
@@ -271,7 +363,16 @@ def compute(ticker: str, facts: dict, price: float, fwd_eps: float | None,
             r.cyclicality_flags.append("margin swing >=15pp")
         if min(margins) < 0:
             r.cyclicality_flags.append("operating loss year in history")
-    eps_hist = last_n(S["diluted_eps"], years)
+    reb, latest_sh_for_eps = rebased_eps(facts, years)
+    if reb:
+        eps_hist = list(reb.values())
+        r.eps_rebased_note = (f"net income / latest {latest_sh_for_eps/1e6:,.0f}M diluted shares "
+                              "(split-immune, buyback-neutral)")
+    else:
+        eps_hist = last_n(S["diluted_eps"], years)
+        r.eps_rebased_note = "as-reported diluted EPS — NOT split-adjusted"
+        r.warnings.append("net income or share count missing — EPS history is as-reported; "
+                          "a stock split would corrupt peak/trough")
     if eps_hist:
         r.peak_eps, r.trough_eps = max(eps_hist), min(eps_hist)
         if r.trough_eps < 0:
@@ -297,10 +398,38 @@ def compute(ticker: str, facts: dict, price: float, fwd_eps: float | None,
                       - cash.get(latest_fy, 0.0))
         r.latest_revenue = rev.get(latest_fy)
 
+    # ex-goodwill ROIC, so acquisition-heavy filers are not scored as
+    # value destroyers purely because goodwill inflates invested capital
+    gw, intg = S["goodwill"], S["intangibles"]
+    roics_ex = []
+    for fy in common:
+        ic = ic_at(fy)
+        if ic:
+            ic_ex = ic - gw.get(fy, 0.0) - intg.get(fy, 0.0)
+            # require the ex-goodwill base to be a meaningful fraction of IC, else
+            # the ratio explodes on a near-zero denominator and means nothing
+            if ic_ex > 0 and ic_ex >= 0.15 * ic:
+                roics_ex.append(opinc[fy] * (1 - r.eff_tax) / ic_ex)
+    r.median_roic_ex_gw = _median(roics_ex) if len(roics_ex) >= max(3, len(common) // 2) else None
+
+    if norm_revenue is not None:
+        r.revenue_base, r.revenue_base_kind = norm_revenue, "사용자 지정 정상화 매출 (방법 1/3)"
+        r.revenue_base_asof = "manual"
+    else:
+        ttm = ttm_flow(facts, "revenue")
+        if ttm:
+            r.revenue_base, r.revenue_base_kind = ttm[0], "TTM (직전 4개 분기)"
+            r.revenue_base_asof = ttm[1]
+        elif r.latest_revenue:
+            r.revenue_base, r.revenue_base_kind = r.latest_revenue, f"FY{latest_fy} 연간"
+            r.revenue_base_asof = f"FY{latest_fy}"
+            r.warnings.append(f"TTM 매출 산출 불가 — FY{latest_fy} 매출을 기반으로 사용 "
+                              "(성장 국면이면 정상화 EPS가 과소계상됨)")
+
     # --- normalized EPS: methods (a) (b) (c) (e) -----------------------------
     sh = r.latest_shares
-    if sh and r.latest_revenue and r.median_op_margin is not None:
-        r.norm_eps_margin = r.latest_revenue * r.median_op_margin * (1 - r.eff_tax) / sh
+    if sh and r.revenue_base and r.median_op_margin is not None:
+        r.norm_eps_margin = r.revenue_base * r.median_op_margin * (1 - r.eff_tax) / sh
     if sh and r.invested_capital and r.median_roic is not None and r.invested_capital > 0:
         r.norm_eps_roic = r.invested_capital * r.median_roic / sh
     if len(eps_hist) >= 5:
@@ -348,6 +477,12 @@ def compute(ticker: str, facts: dict, price: float, fwd_eps: float | None,
     if r.ev_over_ic and r.fair_ev_over_ic and r.fair_ev_over_ic > 0:
         r.ev_ic_ratio = r.ev_over_ic / r.fair_ev_over_ic
         r.ev_ic_discount = 1 - r.ev_ic_ratio
+    if len(r.cyclicality_flags) >= 2 and norm_revenue is None:
+        r.warnings.append(
+            "CYCLICAL TRACK인데 --norm-revenue 미지정 — 마진만 정상화하고 매출은 현재값을 "
+            "사용했다. 커머디티는 매출 자체가 사이클이므로 Peak Ratio가 왜곡된다. "
+            "프롬프트 방법 1(회사 through-cycle 공시) 또는 방법 3(생산능력 x mid-cycle 단가)로 "
+            "정상화 매출을 구해 --norm-revenue 로 주입하라")
     if r.median_roic is not None and r.median_roic < r.wacc:
         r.warnings.append(
             f"median ROIC {r.median_roic*100:.1f}% < WACC {r.wacc*100:.1f}% — growth destroys "
@@ -372,15 +507,21 @@ def report(r: Result) -> str:
         f"  -> {'CYCLICAL TRACK (완전 정상화 필수)' if len(r.cyclicality_flags) >= 2 else 'STRUCTURAL/준시클리컬 TRACK'}",
         "  ※ 상품가격 연동·고객 capex 연동 여부는 정성 판정이므로 수동 확인 필요",
         "\n[STEP 0-B] Normalized EPS",
-        f"  10y 중위 영업이익률        {_f(r.median_op_margin, pct=True)}",
-        f"  10y 중위 ROIC             {_f(r.median_roic, pct=True)}",
+        f"  {r.years}y 중위 영업이익률"
+        + " " * max(1, 10 - len(str(r.years))) + f"{_f(r.median_op_margin, pct=True)}"
+        + ("" if r.years >= 10 else f"   ← 10년 미만, 직전 사이클 일부 누락"),
+        f"  {r.years}y 중위 ROIC             {_f(r.median_roic, pct=True)}"
+        + (f"  (ex-goodwill {_f(r.median_roic_ex_gw, pct=True)})" if r.median_roic_ex_gw else ""),
         f"  실효세율(3y)              {_f(r.eff_tax, pct=True)}",
+        f"  정상화 매출 기반          {_f(r.revenue_base, n=0)}  [{r.revenue_base_kind}"
+        + (f", ~{r.revenue_base_asof}]" if r.revenue_base_asof else "]"),
         f"  (a) 마진 정상화 EPS        {_f(r.norm_eps_margin)}",
         f"  (b) ROIC 정상화 EPS        {_f(r.norm_eps_roic)}",
         f"  (c) 사이클 평균 EPS        {_f(r.norm_eps_cycle)}",
         f"  (e) Trough 앵커 구간       "
         + (f"{_f(r.norm_eps_band[0])} ~ {_f(r.norm_eps_band[1])}" if r.norm_eps_band else "확인 불가"),
         f"  Peak EPS / Trough EPS     {_f(r.peak_eps)} / {_f(r.trough_eps)}",
+        f"     └ EPS 이력 기준        {r.eps_rebased_note}",
         f"  >> 채택 Normalized EPS     {_f(r.norm_eps)}   [{r.method_used}]",
         "\n[PEAK RATIO]",
         f"  Forward EPS               {_f(r.fwd_eps)}",
@@ -411,6 +552,9 @@ def csv_row(r: Result) -> dict:
     return {
         "ticker": r.ticker, "price": r.price, "history_y": r.years,
         "median_op_margin": r.median_op_margin, "median_roic": r.median_roic,
+        "median_roic_ex_gw": r.median_roic_ex_gw,
+        "revenue_base": r.revenue_base, "revenue_base_kind": r.revenue_base_kind,
+        "revenue_base_asof": r.revenue_base_asof,
         "norm_eps": r.norm_eps, "method": r.method_used,
         "fwd_eps": r.fwd_eps, "peak_ratio": r.peak_ratio, "peak_bucket": r.peak_bucket,
         "norm_pe": r.norm_pe, "norm_fcf_yield": r.norm_fcf_yield,
@@ -522,6 +666,28 @@ def selftest() -> int:
     if not trap_ok:
         fails.append("trap exposure")
 
+    print("\n--- BUG A regression: 10:1 split mid-history ---")
+    # same economics, but shares x10 and EPS /10 from FY2022 on, as a split is filed
+    sp = _synth_facts()
+    ni_rows = sp["facts"]["us-gaap"]["NetIncomeLoss"]["units"]["USD"]
+    for row in sp["facts"]["us-gaap"]["WeightedAverageNumberOfDilutedSharesOutstanding"]["units"]["shares"]:
+        if row["fy"] >= 2022:
+            row["val"] = 10000
+    for row in sp["facts"]["us-gaap"]["EarningsPerShareDiluted"]["units"]["USD/shares"]:
+        if row["fy"] >= 2022:
+            row["val"] = row["val"] / 10
+    rs = compute("SPLIT", sp, price=6.0, fwd_eps=0.30, wacc=0.10)
+    # net income is unchanged, so rebasing onto the post-split count must put every
+    # year on the post-split scale: peak = 4.00/10, trough = -0.21/10
+    base = compute("SYNTH", _synth_facts(), price=60.0, fwd_eps=3.00, wacc=0.10)
+    check("split-rebased peak EPS == pre-split peak / 10", rs.peak_eps, base.peak_eps / 10, 1e-9)
+    check("split-rebased trough EPS == pre-split trough / 10", rs.trough_eps, base.trough_eps / 10, 1e-9)
+    check("Peak Ratio unchanged by the split", rs.peak_ratio, base.peak_ratio, 1e-9)
+    reb_ok = "split-immune" in rs.eps_rebased_note
+    print(f"  {'PASS' if reb_ok else 'FAIL'}  EPS basis disclosed: {rs.eps_rebased_note}")
+    if not reb_ok:
+        fails.append("eps basis disclosure")
+
     print("\n--- degradation: no forward EPS ---")
     r2 = compute("SYNTH", facts, price=60.0, fwd_eps=None, wacc=0.10)
     deg_ok = r2.peak_ratio is None and r2.peak_bucket == "확인 불가" and r2.norm_eps is not None
@@ -542,6 +708,10 @@ def main() -> int:
     p.add_argument("--price", type=float, help="current share price (SEC has no prices)")
     p.add_argument("--fwd-eps", type=float, help="forward consensus EPS (SEC has no estimates)")
     p.add_argument("--wacc", type=float, help="override WACC, e.g. 0.095")
+    p.add_argument("--norm-revenue", type=float,
+                   help="mid-cycle/normalized revenue (prompt method 1 or 3). Required for a "
+                        "trustworthy Peak Ratio on commodity cyclicals, where revenue itself "
+                        "is cyclical and margin-only normalization is not enough.")
     p.add_argument("--years", type=int, default=10)
     p.add_argument("--cache", help="read companyfacts JSON from this dir or file")
     p.add_argument("--save-cache", help="save fetched companyfacts JSON into this dir")
@@ -553,14 +723,17 @@ def main() -> int:
     if a.selftest:
         return selftest()
 
-    jobs: list[tuple[str, float, float | None]] = []
+    jobs: list[tuple[str, float, float | None, float | None]] = []
     if a.batch:
         with open(a.batch, newline="") as fh:
             for row in csv.DictReader(fh):
                 fe = row.get("fwd_eps") or ""
-                jobs.append((row["ticker"], float(row["price"]), float(fe) if fe.strip() else None))
+                nr = row.get("norm_revenue") or ""
+                jobs.append((row["ticker"], float(row["price"]),
+                             float(fe) if fe.strip() else None,
+                             float(nr) if nr.strip() else None))
     elif a.ticker and a.price is not None:
-        jobs.append((a.ticker, a.price, a.fwd_eps))
+        jobs.append((a.ticker, a.price, a.fwd_eps, a.norm_revenue))
     elif a.ticker and a.save_cache:
         load_facts(a.ticker, None, a.save_cache)
         print(f"cached companyfacts for {a.ticker.upper()} -> {a.save_cache}")
@@ -569,13 +742,13 @@ def main() -> int:
         p.error("need TICKER --price, or --batch FILE, or --selftest, or TICKER --save-cache DIR")
 
     results = []
-    for tk, px, fe in jobs:
+    for tk, px, fe, nr in jobs:
         try:
             facts = load_facts(tk, a.cache, a.save_cache)
         except SystemExit as exc:
             print(f"{tk}: {exc}", file=sys.stderr)
             continue
-        r = compute(tk, facts, px, fe, a.wacc, a.years)
+        r = compute(tk, facts, px, fe, a.wacc, a.years, nr)
         results.append(r)
         print(report(r))
 
