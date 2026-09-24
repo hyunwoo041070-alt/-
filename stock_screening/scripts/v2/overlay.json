@@ -1,0 +1,235 @@
+{
+"NUTX": {
+"gov_excl": "매출의 약 63%가 No Surprises Act IDR 중재 기반, 비용 추정 변경으로 이익 증가 — 이익 지속성·규제 리스크"
+},
+"HRMY": {
+"trap": "Wakix 단일 제품, 2030년 전후 제네릭 진입 예정 — 영속 가정 DCF 부적합"
+},
+"INVA": {
+"trap": "GSK 호흡기 로열티 만료 임박 — 로열티 감소 구조"
+},
+"APTV": {
+"data_excl": "2026-04 EDS 분사(Versigent)로 과거 재무 비교 불가"
+},
+"VGNT": {
+"data_excl": "2026-04 분사 신설법인, 독립 재무 이력 부족"
+},
+"LNC": {
+"data_excl": "생명보험 — 준비금·AOCI로 자본 왜곡, 잔여이익 모델 신뢰 낮음"
+},
+"HG": {
+"cyc": "정점 근접",
+"cyc_note": "재보험 요율 2024년 이후 20%+ 하락, 2027년 추가 연화 전망"
+},
+"SPNT": {
+"cyc": "정점 근접",
+"cyc_note": "재보험 요율 연화"
+},
+"RNR": {
+"cyc": "정점 근접",
+"cyc_note": "재보험 요율 연화"
+},
+"EG": {
+"cyc": "정점 근접",
+"cyc_note": "재보험 요율 연화"
+},
+"ACGL": {
+"evidence": 6,
+"factor": "보험 사이클",
+"why": "재보험 연화 우려로 P/B 할인, 다각화된 특종·모기지 사업"
+},
+"AXS": {
+"evidence": 6,
+"factor": "보험 사이클"
+},
+"SLDE": {
+"evidence": 10,
+"factor": "보험 사이클",
+"why": "플로리다 주택보험 — 허리케인 리스크 할인, 재보험 비용 하락은 수혜",
+"cat": 3
+},
+"NMIH": {
+"factor": "보험 사이클",
+"evidence": 10,
+"cat": 3
+},
+"ESNT": {
+"factor": "보험 사이클"
+},
+"MTG": {
+"factor": "보험 사이클"
+},
+"RDN": {
+"factor": "보험 사이클"
+},
+"ACT": {
+"factor": "보험 사이클"
+},
+"PYPL": {
+"evidence": 6,
+"cat": 5,
+"factor": "결제",
+"why": "브랜디드 체크아웃 성장 2%, CEO 교체 — 성장 정체 할인"
+},
+"GDDY": {
+"evidence": 6,
+"cat": 3,
+"factor": "AI 대체 우려",
+"why": "LLM이 유입 채널을 바꿀 것이란 AI 대체 우려로 고점 대비 −58%"
+},
+"EDU": {
+"evidence": 10,
+"cat": 3,
+"factor": "중국",
+"why": "중국 규제 트라우마와 VIE 할인, FY27 매출 +14~18% 가이던스"
+},
+"TAL": {
+"evidence": 6,
+"factor": "중국",
+"why": "중국 교육 규제 트라우마, FY27 1분기 순이익에 투자이익 등 일회성 포함"
+},
+"HRB": {
+"evidence": 6,
+"factor": "AI 대체 우려",
+"why": "AI·소프트웨어·정부 무료 신고가 세무 대행 수요를 잠식할 것이란 우려"
+},
+"LRN": {
+"evidence": 2,
+"why": "플랫폼 전환 실패로 등록 1~1.5만명 누락, 가이던스 하향",
+"factor": "교육(규제)"
+},
+"DECK": {
+"evidence": 6,
+"factor": "소비",
+"why": "HOKA 성장률 한 자릿수로 둔화"
+},
+"KSPI": {
+"evidence": 6,
+"factor": "신흥국",
+"why": "튀르키예 확장 손실, 카자흐 규제·금리 우려로 −32%"
+},
+"NRDS": {
+"evidence": 0,
+"cust25": true,
+"why": "대형 보험사 1곳 이탈, 오가닉 검색 감소 — 가이던스 하향"
+},
+"REPX": {
+"factor": "유가",
+"evidence": 10,
+"cyc": "중반"
+},
+"MTDR": {
+"factor": "유가",
+"evidence": 6,
+"cyc": "중반"
+},
+"NOG": {
+"factor": "유가",
+"cyc": "중반"
+},
+"GPOR": {
+"factor": "유가",
+"cyc": "중반"
+},
+"MGY": {
+"factor": "유가",
+"cyc": "중반"
+},
+"FLOC": {
+"factor": "유가"
+},
+"PRG": {
+"factor": "소비자 신용",
+"evidence": 10,
+"why": "리스·BNPL 서브프라임 소비자 신용 우려 할인",
+"cat": 5
+},
+"BFH": {
+"factor": "소비자 신용"
+},
+"OPFI": {
+"factor": "소비자 신용"
+},
+"JCAP": {
+"factor": "소비자 신용"
+},
+"ENVA": {
+"factor": "소비자 신용"
+},
+"6669.TW": {
+"factor": "AI capex"
+},
+"2382.TW": {
+"factor": "AI capex"
+},
+"YALA": {
+"factor": "신흥국"
+},
+"DLO": {
+"factor": "신흥국"
+},
+"VEON": {
+"factor": "신흥국"
+},
+"ADMA": {
+"gov_excl": "2026-03 공매도 보고서(채널 스터핑·특수관계 유통 의혹), 증권집단소송, 장기 가이던스 철회"
+},
+"EXEL": {
+"evidence": 6,
+"cat": 5,
+"why": "카보잔티닙 2031-01 미국 제네릭 진입 예정 — 특허 절벽 할인"
+},
+"SNY": {
+"evidence": 6,
+"factor": "제약 특허",
+"why": "파이프라인 중단·듀피젠트 의존(2032 특허 만료) 할인"
+},
+"ADT": {
+"evidence": 6,
+"why": "가입자 이탈률 상승·성장 정체(2026 매출 +2%)"
+},
+"TASK": {
+"factor": "AI 대체 우려",
+"why": "AI가 BPO 인력을 대체할 것이란 우려"
+},
+"G": {
+"evidence": 6,
+"factor": "AI 대체 우려",
+"why": "AI가 아웃소싱 수요를 줄인다는 우려로 올해 −40%"
+},
+"GEN": {
+"factor": "AI 대체 우려"
+},
+"ADBE": {
+"factor": "AI 대체 우려",
+"why": "생성형 AI가 크리에이티브 소프트웨어를 대체할 것이란 우려"
+},
+"DOX": {
+"factor": "AI 대체 우려"
+},
+"YELP": {
+"factor": "AI 대체 우려",
+"why": "AI 검색이 로컬 검색 트래픽을 잠식할 것이란 우려"
+},
+"CARG": {
+"factor": "AI 대체 우려"
+},
+"PXED": {
+"factor": "교육(규제)"
+},
+"ESEA": {
+"factor": "해운",
+"evidence": 10,
+"cyc": "정점 근접",
+"cyc_note": "컨테이너선 용선료 호황(홍해·호르무즈 우회) — 보유 이력 4년이 모두 호황기라 mid-cycle 측정 불가, FY+2 EPS −15%"
+},
+"GAP": {
+"factor": "소비"
+},
+"GIII": {
+"factor": "소비"
+},
+"ANF": {
+"factor": "소비"
+}
+}

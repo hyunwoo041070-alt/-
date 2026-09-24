@@ -18,3 +18,16 @@
 | 10 | `tables.py` | Top 20·Ranking·Peak-trap 표와 전체 CSV 출력 |
 
 동시 요청이 많으면 Yahoo가 요청 수를 제한한다. `W=2` 환경변수로 동시 작업 수를 줄이고 다시 실행하면 된다. 이미 받은 파일은 건너뛴다.
+
+## v2 (내재가치 + 성장 대비, 시총 제한 없음)
+
+`scripts/v2/`의 스크립트는 v1 스크립트와 같은 작업 디렉터리에서, v1 산출물(`d1/`, `d2/`, `fx.json`, `intl.json`)이 있는 상태에서 실행한다. 스크립트는 `v2/` 하위 폴더에 두고 실행한다.
+
+| 순서 | 스크립트 | 역할 |
+|---|---|---|
+| 1 | `v2/universe_all.py` | 시총 제한 없는 미국 상장 전 종목 수집 → 거래대금 $1M·주가 $1 필터는 수동 단계에서 `v2/liquid.json`으로 저장 |
+| 2 | `fetch1.py v2/liquid.json` | 컨센서스 수집 |
+| 3 | `v2/d2list.py` → `fetch2.py v2/d2todo.json` | 흑자·금융사만 재무제표 수집(빈 응답은 재시도) |
+| 4 | (수동) | 5년 주간 주가 `v2/px5y.pkl` 저장 |
+| 5 | `v2/model.py v2/all.json` | 정상화 이익·사이클 판정·DCF 3시나리오·EPV·역산 지속기간 → `v2/model.pkl` |
+| 6 | `v2/score2.py` | 트랙 A/B/C, 제외 규칙, 100점 채점, `v2/overlay.json` 수동 판단 반영 → `v2/scored2.pkl` |
